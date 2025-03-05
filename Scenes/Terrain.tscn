@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://boabnhi66wcbe"]
+
+[ext_resource type="Script" uid="uid://8ljbvseh7sq7" path="res://Core/Systems/Terrain/Terrain.cs" id="1_j4ig8"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_j4ig8")
+WorldSize = 144

@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="New Tera"
-config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
+run/main_scene="uid://boabnhi66wcbe"
+config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+config/icon="res://Assets/icon.svg"
 
 [dotnet]
 
