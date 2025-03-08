@@ -32,9 +32,9 @@ public static class VoxelRegistry
         }
 
         var jsonText = File.ReadAllText(jsonPath);
-        var voxelList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(jsonText);
+        var voxelList = JsonSerializer.Deserialize<List<VoxelType>>(jsonText);
 
-        foreach (var voxel in voxelList.Select(voxelData => VoxelType.FromJson(voxelData, _nextId)))
+        foreach (var voxel in voxelList)
         {
             Register(voxel);
         }

@@ -14,7 +14,7 @@ public class VoxelType(int id, string name, bool isSolid, Color color)
     public static VoxelType FromJson(Dictionary<string, object> data, int autoId)
     {
         var name = data["name"].ToString();
-        var isSolid = Convert.ToBoolean(data["is_solid"]);
+        var isSolid = bool.Parse(data["is_solid"].ToString());
 
         var colorArray = (List<object>)data["color"];
         var color = new Color(
