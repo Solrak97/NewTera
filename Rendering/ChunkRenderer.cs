@@ -14,12 +14,9 @@ public partial class ChunkRenderer : MeshInstance3D
 	private int _chunkWidth;
 	private int _chunkHeight;
 	
-	private List<Vector3> _vertices;
 	private List<Vector2> _uvs;
 	private List<Vector3> _normals;
-	private List<int> _indices;
-
-	private Material _material;
+	
 	private ArrayMesh _mesh;
 	private SurfaceTool _surfaceTool;
 
@@ -90,7 +87,12 @@ public partial class ChunkRenderer : MeshInstance3D
 	public void Initialize(Material material, Vector2 position, VoxelType[,,] chunkData, string name="ChunkRenderer")
 	{
 		this.Name = name;
-		this._material = material;
+
+		if (material != null)
+		{
+			MaterialOverride = material;
+		}
+		
 		this._chunkData = chunkData;
 		
 		_chunkWidth = chunkData.GetLength(0);
@@ -98,10 +100,8 @@ public partial class ChunkRenderer : MeshInstance3D
 		
 		this._position = new Vector3(position.X, 0, position.Y);
 		
-		_vertices = [];
 		_uvs = [];
 		_normals = [];
-		_indices = [];
 	}
 
 	public void LoadChunkData(VoxelType[,,] chunkData)
@@ -112,14 +112,7 @@ public partial class ChunkRenderer : MeshInstance3D
 
 	public void UploadMesh()
 	{
-		foreach (var t in _indices)
-		{
-			_surfaceTool.AddVertex(_vertices[t]);
-		}
-		
-		_surfaceTool.Index();
 		_surfaceTool.Commit(_mesh);
-		
 		this.Mesh = _mesh;
 	}
 
@@ -132,60 +125,61 @@ public partial class ChunkRenderer : MeshInstance3D
 
 	public void GenerateMesh()
 	{
-		for (var x = 0; x < _chunkWidth; x++)
+		for (var i = 0; i < _chunkWidth * _chunkHeight * _chunkWidth; i++)
 		{
-			for (var y = 0; y < _chunkHeight; y++)
+			var x = i % _chunkWidth;
+			var y = (i / _chunkWidth) % _chunkHeight;
+			var z = i / (_chunkWidth * _chunkHeight);
+			
+			var voxel = _chunkData[x, y, z];
+			
+			AddVoxel(voxel, new Vector3I(x, y, z));
+		}
+	}
+
+	private void AddVoxel(VoxelType voxel, Vector3 position)
+	{
+		if (!voxel.IsSolid) return;
+		
+		for (var i = 0; i < 6; i++)
+		{
+			var neighborPos = position + voxelFaceChecks[i];
+
+			if (IsValidPosition(neighborPos))
 			{
-				for (var z = 0; z < _chunkWidth; z++)
-				{
-					var voxel = _chunkData[x, y, z];
+				var neighborVoxel = _chunkData[
+					(int)neighborPos.X, 
+					(int)neighborPos.Y,
+					(int)neighborPos.Z
+				];
 
-					if (!voxel.IsSolid) continue;
-					
-					var blockPos = new Vector3(
-						x,
-						y,
-						z
-						);
-					
-
-					for (var i = 0; i < 6; i++)
-					{
-						
-						var neighborPos = blockPos + voxelFaceChecks[i];
-
-						if (IsValidPosition(neighborPos))
-						{
-							var neighborVoxel = _chunkData[
-								(int)neighborPos.X, 
-								(int)neighborPos.Y,
-								(int)neighborPos.Z
-							];
-
-							if (neighborVoxel.IsSolid) continue;
-						}
-						
-						var faceVertices = new Vector3[4];
-						var faceUVs = new Vector2[4];
-						var faceColors = new Color[4];
-
-						for (var j = 0; j < 4; j++)
-						{
-							faceVertices[j] = voxelVertices[voxelVertexIndex[i, j]] + blockPos;
-							//faceUVs[j] = voxel.GetUVs(j);
-							faceColors[j] = voxel.Color;
-						}
-
-						for (int j = 0; j < 6; j++)
-						{
-							_vertices.Add(faceVertices[voxelTris[i, j]]);
-							_uvs.Add(faceUVs[voxelTris[i, j]]);
-							//colors.Add(faceColors[voxelTris[i, j]]);
-							_indices.Add(_vertices.Count - 1);
-						}
-					}
-				}
+				if (neighborVoxel.IsSolid) continue;
 			}
+						
+			AddFace(voxel, i, neighborPos);
+			
+		}
+		
+	}
+
+	private void AddFace(VoxelType voxel, int index, Vector3 position)
+	{
+		var faceVertices = new Vector3[4];
+		//var faceUVs = new Vector2[4];
+
+		for (var i = 0; i < 4; i++)
+		{
+			faceVertices[i] = voxelVertices[voxelVertexIndex[index, i]] + position;
+			//faceUVs[j] = voxel.GetUVs(j);
+		}
+
+		_surfaceTool.SetColor(new Color(0.55f, 0.27f, 0.07f));
+		
+		for (var i = 0; i < 6; i++)
+		{
+			_surfaceTool.AddVertex(faceVertices[voxelTris[index, i]]);
+			//(faceUVs[voxelTris[index, i]]);
+			//_colors.Add(faceColors[voxelTris[index, i]]);
 		}
 	}
 }
