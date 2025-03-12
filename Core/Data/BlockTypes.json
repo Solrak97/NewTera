@@ -2,16 +2,251 @@
 	{
 		"Name": "Grass",
 		"IsSolid": true,
-		"color": [0.1, 0.8, 0.1]
+		"Color": [0.1, 0.8, 0.1]
 	},
 	{
 		"Name": "Dirt",
 		"IsSolid": true,
-		"color": [0.5, 0.3, 0.1]
+		"Color": [0.5, 0.3, 0.1]
 	},
 	{
 		"Name": "Stone",
 		"IsSolid": true,
-		"color": [0.6, 0.6, 0.6]
+		"Color": [0.6, 0.6, 0.6]
+	},
+	{
+		"Name": "Sand",
+		"IsSolid": true,
+		"Color": [0.9, 0.8, 0.4]
+	},
+	{
+		"Name": "Water",
+		"IsSolid": false,
+		"Color": [0.0, 0.0, 1.0]
+	},
+	{
+		"Name": "Wood",
+		"IsSolid": true,
+		"Color": [0.6, 0.3, 0.1]
+	},
+	{
+		"Name": "Mud",
+		"IsSolid": true,
+		"Color": [0.4, 0.2, 0.1]
+	},
+	{
+		"Name": "Ice",
+		"IsSolid": true,
+		"Color": [0.6, 0.9, 1.0]
+	},
+	{
+		"Name": "Clay",
+		"IsSolid": true,
+		"Color": [0.7, 0.5, 0.3]
+	},
+	{
+		"Name": "Metal",
+		"IsSolid": true,
+		"Color": [0.8, 0.8, 0.8]
+	},
+	{
+		"Name": "Glass",
+		"IsSolid": true,
+		"Color": [0.4, 0.6, 0.8]
+	},
+	{
+		"Name": "Coal",
+		"IsSolid": true,
+		"Color": [0.2, 0.2, 0.2]
+	},
+	{
+		"Name": "Lava",
+		"IsSolid": true,
+		"Color": [1.0, 0.3, 0.0]
+	},
+	{
+		"Name": "Gravel",
+		"IsSolid": true,
+		"Color": [0.4, 0.4, 0.4]
+	},
+	{
+		"Name": "Snow",
+		"IsSolid": true,
+		"Color": [1.0, 1.0, 1.0]
+	},
+	{
+		"Name": "Plank",
+		"IsSolid": true,
+		"Color": [0.8, 0.6, 0.3]
+	},
+	{
+		"Name": "Coral",
+		"IsSolid": true,
+		"Color": [1.0, 0.3, 0.7]
+	},
+	{
+		"Name": "Brick",
+		"IsSolid": true,
+		"Color": [0.7, 0.4, 0.2]
+	},
+	{
+		"Name": "Granite",
+		"IsSolid": true,
+		"Color": [0.5, 0.5, 0.5]
+	},
+	{
+		"Name": "Obsidian",
+		"IsSolid": true,
+		"Color": [0.1, 0.1, 0.1]
+	},
+	{
+		"Name": "Emerald",
+		"IsSolid": true,
+		"Color": [0.1, 1.0, 0.0]
+	},
+	{
+		"Name": "Ruby",
+		"IsSolid": true,
+		"Color": [1.0, 0.0, 0.0]
+	},
+	{
+		"Name": "Gold",
+		"IsSolid": true,
+		"Color": [1.0, 0.8, 0.2]
+	},
+	{
+		"Name": "Diamond",
+		"IsSolid": true,
+		"Color": [0.7, 0.9, 1.0]
+	},
+	{
+		"Name": "Cobalt",
+		"IsSolid": true,
+		"Color": [0.1, 0.3, 0.8]
+	},
+	{
+		"Name": "Silver",
+		"IsSolid": true,
+		"Color": [0.7, 0.7, 0.7]
+	},
+	{
+		"Name": "Copper",
+		"IsSolid": true,
+		"Color": [0.8, 0.5, 0.2]
+	},
+	{
+		"Name": "Quartz",
+		"IsSolid": true,
+		"Color": [0.9, 0.9, 0.9]
+	},
+	{
+		"Name": "Sandstone",
+		"IsSolid": true,
+		"Color": [0.8, 0.7, 0.5]
+	},
+	{
+		"Name": "Amethyst",
+		"IsSolid": true,
+		"Color": [0.5, 0.2, 1.0]
+	},
+	{
+		"Name": "Sapphire",
+		"IsSolid": true,
+		"Color": [0.2, 0.3, 1.0]
+	},
+	{
+		"Name": "Pearl",
+		"IsSolid": true,
+		"Color": [1.0, 1.0, 1.0]
+	},
+	{
+		"Name": "Marble",
+		"IsSolid": true,
+		"Color": [0.9, 0.9, 0.9]
+	},
+	{
+		"Name": "Moss",
+		"IsSolid": true,
+		"Color": [0.2, 0.6, 0.2]
+	},
+	{
+		"Name": "Turf",
+		"IsSolid": true,
+		"Color": [0.4, 0.7, 0.3]
+	},
+	{
+		"Name": "PineWood",
+		"IsSolid": true,
+		"Color": [0.5, 0.3, 0.1]
+	},
+	{
+		"Name": "BirchWood",
+		"IsSolid": true,
+		"Color": [0.8, 0.7, 0.4]
+	},
+	{
+		"Name": "OakWood",
+		"IsSolid": true,
+		"Color": [0.6, 0.4, 0.2]
+	},
+	{
+		"Name": "WillowWood",
+		"IsSolid": true,
+		"Color": [0.4, 0.6, 0.2]
+	},
+	{
+		"Name": "AshWood",
+		"IsSolid": true,
+		"Color": [0.7, 0.5, 0.3]
+	},
+	{
+		"Name": "MapleWood",
+		"IsSolid": true,
+		"Color": [0.6, 0.3, 0.1]
+	},
+	{
+		"Name": "CedarWood",
+		"IsSolid": true,
+		"Color": [0.5, 0.3, 0.1]
+	},
+	{
+		"Name": "Rosewood",
+		"IsSolid": true,
+		"Color": [0.6, 0.4, 0.2]
+	},
+	{
+		"Name": "HickoryWood",
+		"IsSolid": true,
+		"Color": [0.5, 0.4, 0.3]
+	},
+	{
+		"Name": "TeakWood",
+		"IsSolid": true,
+		"Color": [0.7, 0.5, 0.3]
+	},
+	{
+		"Name": "Bamboo",
+		"IsSolid": true,
+		"Color": [0.4, 0.6, 0.1]
+	},
+	{
+		"Name": "PalmWood",
+		"IsSolid": true,
+		"Color": [0.8, 0.7, 0.4]
+	},
+	{
+		"Name": "Cork",
+		"IsSolid": true,
+		"Color": [0.7, 0.6, 0.4]
+	},
+	{
+		"Name": "AshStone",
+		"IsSolid": true,
+		"Color": [0.6, 0.5, 0.3]
+	},
+	{
+		"Name": "Slate",
+		"IsSolid": true,
+		"Color": [0.4, 0.4, 0.4]
 	}
 ]

@@ -158,13 +158,11 @@ public partial class ChunkRenderer : MeshInstance3D
 			//faceUVs[j] = voxel.GetUVs(j);
 		}
 
-		_surfaceTool.SetColor(new Color((float)GD.Randf(), (float)GD.Randf(), (float)GD.Randf()));
-
+		_surfaceTool.SetColor(voxel.Color);
 		for (var i = 5; i >= 0; i--)
 		{
 			_surfaceTool.AddVertex(faceVertices[voxelTris[index, i]]);
 			//(faceUVs[voxelTris[index, i]]);
-			//_colors.Add(faceColors[voxelTris[index, i]]);
 		}
 	}
 

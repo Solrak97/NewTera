@@ -60,7 +60,7 @@ public partial class Chunk : Node3D
             {
                 for (var z = 0; z < ChunkWidth; z++)
                 {
-                    _voxels[x, y, z] = (y <= 4) ? VoxelRegistry.GetVoxel("Stone") : VoxelRegistry.GetVoxel("Air");
+                    _voxels[x, y, z] = (y <= 16) ? VoxelRegistry.GetRandomVoxel() : VoxelRegistry.GetVoxel("Air");
                 }
             }
         }

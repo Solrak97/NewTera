@@ -1,8 +1,10 @@
+using System;
 using Godot;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using NewTera.Utils;
 
 
 namespace NewTera.Core.Systems.Voxels;
@@ -19,31 +21,43 @@ public static class VoxelRegistry
     {
         VoxelMap[voxel.Id] = voxel;
         VoxelNames[voxel.Name.ToUpper()] = voxel;
-        _nextId = voxel.Id + 1; // Ensure ID keeps increasing
+        _nextId = voxel.Id + 1;
         return voxel;
     }
 
     public static void LoadVoxels(string jsonPath)
     {
-        if (!File.Exists(jsonPath))
+        try
         {
-            GD.PrintErr($"Voxel JSON file not found: {jsonPath}");
-            return;
+            var voxelList = JsonLoader.LoadJsonAsDictionary(jsonPath);
+        
+            foreach (var voxelEntry in voxelList)
+            {
+                var name = voxelEntry["Name"];
+                var solid = bool.Parse(voxelEntry["IsSolid"]);
+                var color = StringParse.StringToColor(voxelEntry["Color"]);
+                
+                Register(new VoxelType(_nextId, name, solid, color));
+            }
+
+            GD.Print($"Loaded {VoxelMap.Count} voxel types.");
         }
-
-        var jsonText = File.ReadAllText(jsonPath);
-        var voxelList = JsonSerializer.Deserialize<List<VoxelType>>(jsonText);
-
-        foreach (var voxel in voxelList)
+        catch (Exception e)
         {
-            Register(voxel);
+            Console.WriteLine($"Unable to load Voxel File: {e}");
+            throw;
         }
-
-        GD.Print($"Loaded {VoxelMap.Count} voxel types.");
     }
 
     public static VoxelType GetVoxel(int id) => VoxelMap.GetValueOrDefault(id, AIR);
 
     public static VoxelType GetVoxel(string name) =>
         VoxelNames.ContainsKey(name.ToUpper()) ? VoxelNames[name.ToUpper()] : AIR;
+
+    public static VoxelType GetRandomVoxel()
+    {
+        var keys = new List<string>(VoxelNames.Keys);
+        var randomKey = keys[GD.RandRange(0, keys.Count - 1)];
+        return VoxelNames[randomKey];
+    }
 }
