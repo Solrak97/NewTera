@@ -4,4 +4,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>NewTera</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Core\Data\BlockShader.gdshader" />
+  </ItemGroup>
 </Project>

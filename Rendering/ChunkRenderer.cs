@@ -13,10 +13,10 @@ public partial class ChunkRenderer : MeshInstance3D
 
 	private int _chunkWidth;
 	private int _chunkHeight;
-	
+
 	private List<Vector2> _uvs;
 	private List<Vector3> _normals;
-	
+
 	private ArrayMesh _mesh;
 	private SurfaceTool _surfaceTool;
 
@@ -25,27 +25,27 @@ public partial class ChunkRenderer : MeshInstance3D
 
 	#region VoxelConstantsTable
 
-	static readonly Vector3[] voxelFaceChecks = new Vector3[6]
-	{
-		new Vector3(0, 0, -1),
-		new Vector3(0, 0, 1),
-		new Vector3(-1, 0, 0),
-		new Vector3(1, 0, 0),
-		new Vector3(0, -1, 0),
-		new Vector3(0, 1, 0)
-	};
+	static readonly Vector3I[] voxelFaceChecks =
+	[
+		new Vector3I(0, 0, -1),
+		new Vector3I(0, 0, 1),
+		new Vector3I(-1, 0, 0),
+		new Vector3I(1, 0, 0),
+		new Vector3I(0, -1, 0),
+		new Vector3I(0, 1, 0)
+	];
 
-	static readonly Vector3[] voxelVertices = new Vector3[8]
-	{
-		new Vector3(0, 0, 0),
-		new Vector3(1, 0, 0),
-		new Vector3(0, 1, 0),
-		new Vector3(1, 1, 0),
-		new Vector3(0, 0, 1),
-		new Vector3(1, 0, 1),
-		new Vector3(0, 1, 1),
-		new Vector3(1, 1, 1),
-	};
+	static readonly Vector3I[] voxelVertices =
+	[
+		new Vector3I(0, 0, 0),
+		new Vector3I(1, 0, 0),
+		new Vector3I(0, 1, 0),
+		new Vector3I(1, 1, 0),
+		new Vector3I(0, 0, 1),
+		new Vector3I(1, 0, 1),
+		new Vector3I(0, 1, 1),
+		new Vector3I(1, 1, 1)
+	];
 
 	static readonly int[,] voxelVertexIndex = new int[6, 4]
 	{
@@ -83,8 +83,8 @@ public partial class ChunkRenderer : MeshInstance3D
 		_surfaceTool = new SurfaceTool();
 		_surfaceTool.Begin(Mesh.PrimitiveType.Triangles);
 	}
-	
-	public void Initialize(Material material, Vector2 position, VoxelType[,,] chunkData, string name="ChunkRenderer")
+
+	public void Initialize(Material material, Vector2 position, VoxelType[,,] chunkData, string name = "ChunkRenderer")
 	{
 		this.Name = name;
 
@@ -92,14 +92,14 @@ public partial class ChunkRenderer : MeshInstance3D
 		{
 			MaterialOverride = material;
 		}
-		
+
 		this._chunkData = chunkData;
-		
+
 		_chunkWidth = chunkData.GetLength(0);
 		_chunkHeight = chunkData.GetLength(1);
-		
+
 		this._position = new Vector3(position.X, 0, position.Y);
-		
+
 		_uvs = [];
 		_normals = [];
 	}
@@ -114,15 +114,11 @@ public partial class ChunkRenderer : MeshInstance3D
 	{
 		_surfaceTool.Commit(_mesh);
 		this.Mesh = _mesh;
+
+		GD.Print($"Total polygons on chunk: {(_mesh.GetFaces().Length / 3 )}");
 	}
 
-	private bool IsValidPosition(Vector3 position)
-	{
-		return (0 >= position.X && position.X > _chunkWidth && 
-				0 >= position.Y && position.Y >= _chunkHeight && 
-				0 >= position.Z && position.Z > _chunkWidth);
-	}
-
+	
 	public void GenerateMesh()
 	{
 		for (var i = 0; i < _chunkWidth * _chunkHeight * _chunkWidth; i++)
@@ -130,36 +126,25 @@ public partial class ChunkRenderer : MeshInstance3D
 			var x = i % _chunkWidth;
 			var y = (i / _chunkWidth) % _chunkHeight;
 			var z = i / (_chunkWidth * _chunkHeight);
-			
+
 			var voxel = _chunkData[x, y, z];
-			
+
 			AddVoxel(voxel, new Vector3I(x, y, z));
 		}
 	}
 
-	private void AddVoxel(VoxelType voxel, Vector3 position)
+	private void AddVoxel(VoxelType voxel, Vector3I position)
 	{
-		if (!voxel.IsSolid) return;
+		List<Vector3> idx = new List<Vector3>();
 		
+		if (!voxel.IsSolid) return;
+
 		for (var i = 0; i < 6; i++)
 		{
 			var neighborPos = position + voxelFaceChecks[i];
-
-			if (IsValidPosition(neighborPos))
-			{
-				var neighborVoxel = _chunkData[
-					(int)neighborPos.X, 
-					(int)neighborPos.Y,
-					(int)neighborPos.Z
-				];
-
-				if (neighborVoxel.IsSolid) continue;
-			}
-						
-			AddFace(voxel, i, neighborPos);
-			
+			if (!IsNeighborSolid(neighborPos))
+				AddFace(voxel, i, position);
 		}
-		
 	}
 
 	private void AddFace(VoxelType voxel, int index, Vector3 position)
@@ -173,13 +158,32 @@ public partial class ChunkRenderer : MeshInstance3D
 			//faceUVs[j] = voxel.GetUVs(j);
 		}
 
-		_surfaceTool.SetColor(new Color(0.55f, 0.27f, 0.07f));
-		
-		for (var i = 0; i < 6; i++)
+		_surfaceTool.SetColor(new Color((float)GD.Randf(), (float)GD.Randf(), (float)GD.Randf()));
+
+		for (var i = 5; i >= 0; i--)
 		{
 			_surfaceTool.AddVertex(faceVertices[voxelTris[index, i]]);
 			//(faceUVs[voxelTris[index, i]]);
 			//_colors.Add(faceColors[voxelTris[index, i]]);
 		}
+	}
+
+	private bool IsNeighborSolid(Vector3I position)
+	{
+		if (!IsValidPosition(position)) return false;
+		var neighborVoxel = _chunkData[
+			position.X,
+			position.Y,
+			position.Z
+		];
+
+		return neighborVoxel.IsSolid;
+	}
+	
+	private bool IsValidPosition(Vector3 position)
+	{
+		return (0 >= position.X && position.X > _chunkWidth &&
+				0 >= position.Y && position.Y >= _chunkHeight &&
+				0 >= position.Z && position.Z > _chunkWidth);
 	}
 }
